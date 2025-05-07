@@ -1,0 +1,43 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "bin": "server.js",
+"scripts": {
+  "start": "node server.js",
+
+  "delete-public": "if exist public rd /s /q public",
+  "create-public": "if not exist public mkdir public",
+  "build-frontend": "cd ../frontend && npm run build",
+  "copy-build": "xcopy /s /e /i /y \"../frontend/build\" public\\",
+
+  "build": "npm run delete-public && npm run build-frontend && npm run create-public && npm run copy-build",
+
+  "prepare-dist": "if exist dist rd /s /q dist && mkdir dist && mkdir dist\\uploads && xcopy /s /e /i /y public dist\\public\\ && xcopy /s /e /i /y uploads dist\\uploads\\",
+
+  "package": "npm run build && npm run prepare-dist && pkg . --targets node18-win-x64 --output dist\\ImageUploader.exe"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "mssql": "^11.0.1",
+    "multer": "^1.4.5-lts.2"
+  },
+  "pkg": {
+    "assets": [
+      "public/**/*",
+      "uploads/**/*"
+    ],
+    "scripts": [
+      "server.js"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ]
+  }
+}
