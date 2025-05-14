@@ -3,20 +3,19 @@
   "version": "1.0.0",
   "main": "server.js",
   "bin": "server.js",
-"scripts": {
-  "start": "node server.js",
-
-  "delete-public": "if exist public rd /s /q public",
-  "create-public": "if not exist public mkdir public",
-  "build-frontend": "cd ../frontend && npm run build",
-  "copy-build": "xcopy /s /e /i /y \"../frontend/build\" public\\",
-
-  "build": "npm run delete-public && npm run build-frontend && npm run create-public && npm run copy-build",
-
-  "prepare-dist": "if exist dist rd /s /q dist && mkdir dist && mkdir dist\\uploads && xcopy /s /e /i /y public dist\\public\\ && xcopy /s /e /i /y uploads dist\\uploads\\",
-
-  "package": "npm run build && npm run prepare-dist && pkg . --targets node18-win-x64 --output dist\\ImageUploader.exe"
-},
+  "scripts": {
+    "start": "node server.js",
+      "test": "jest --detectOpenHandles",
+  "test:watch": "jest --watch",
+  "test:coverage": "jest --coverage",
+    "delete-public": "if exist public rd /s /q public",
+    "create-public": "if not exist public mkdir public",
+    "build-frontend": "cd ../frontend && npm run build",
+    "copy-build": "xcopy /s /e /i /y \"../frontend/build\" public\\",
+    "build": "npm run delete-public && npm run build-frontend && npm run create-public && npm run copy-build",
+    "prepare-dist": "if exist dist rd /s /q dist && mkdir dist && if exist public xcopy /s /e /i /y public dist\\public\\",
+    "package": "npm run build && npm run prepare-dist && pkg . --targets node18-win-x64 --output dist\\ImageUploader.exe"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -26,7 +25,8 @@
     "dotenv": "^16.5.0",
     "express": "^4.18.2",
     "mssql": "^11.0.1",
-    "multer": "^1.4.5-lts.2"
+    "multer": "^1.4.5-lts.2",
+    "package": "^1.0.1"
   },
   "pkg": {
     "assets": [
@@ -39,5 +39,10 @@
     "targets": [
       "node18-win-x64"
     ]
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "mock-fs": "^5.5.0",
+    "supertest": "^7.1.1"
   }
 }

@@ -6,104 +6,187 @@ A full-stack application for uploading and managing images with SQL Server stora
 
 ## Features
 
-- **Drag & Drop** image upload interface
-- **Image Gallery** with thumbnail previews
-- **Delete functionality** for uploaded images
-- **SQL Server** backend storage
-- **Responsive design** works on all devices
-- **Secure file validation** (type and size)
+- ✅ **Drag & Drop** image upload interface  
+- 🖼️ **Image Gallery** with thumbnail previews  
+- 🗑️ **Delete functionality** for uploaded images  
+- 🗄️ **SQL Server** backend storage  
+- 🔄 **Custom port configuration** for testing flexibility
+- 📱 **Responsive design**  
+- 🔐 **Secure file validation** (type and size)
 
-## Prerequisites
+---
 
-- Node.js 18+
-- SQL Server 2019+
+## 🧰 Prerequisites
+
+- Node.js v18+
+- SQL Server 2019+ with **TCP/IP enabled on port 1433**
+- Git (for cloning repo)
 - Windows/Linux/macOS
 
-## Installation
+---
 
-### 1. Backend Setup
+## 🚀 Installation Instructions
+
+### 1. 📦 Backend Setup
 
 ```bash
 cd backend
-npm install
+npm install 
+```
 
-Create a config.json file in the backend directory:
+Then create a `config.json` file inside the `backend` directory:
 
-json
+```json
 {
-  "sql": {
-    "server": "your-server\\instance",
-    "user": "your-username",
-    "password": "your-password",
-    "database": "ImageUploader",
-    "options": {
-      "encrypt": false,
-      "trustServerCertificate": true
-    }
-  },
-  "app": {
-    "port": 3001,
-    "uploadDir": "./uploads"
+    "user": "ImageUploaderApp2",
+    "password": "ImageUploaderApp2",
+    "server": "DESKTOP-89EE1FR\\MSSQLSERVER01",
+    "database": "ImageUploadDB",
+    "port":3001
   }
-}
+  
+```
 
+> ⚠️ **Ensure port 1433 is enabled in SQL Server Configuration Manager under TCP/IP settings**
 
-2. Frontend Setup
-bash
-cd frontend
-npm install
+---
 
+### 2. 🎨 Frontend Setup
 
-cd frontend
-npm start
+```bash
+cd ../frontend
+npm install --legacy-peer-deps
 
-Copy build to backend:
+```
 
-bash
-xcopy /E /I /Y frontend\\build backend\\public
+### 3. 🔨 Build Both Frontend and Backend
 
+```bash
+# Build frontend
+# cd frontend -> You must be now at the frontend folder, no need to cd
+npm run build
 
-Run production server:
+# Build backend
+cd ../backend
+npm run build
+```
 
-bash
+---
+
+## ▶️ Run in Development Mode
+
+**Backend:**
+
+```bash
 cd backend
 npm start
+```
+
+**Frontend (optional for dev) {Not really needed}:**
+
+```bash
+cd frontend
+npm start
+```
+
+---
+
+## 📦 Packaging as Standalone Executable
+
+To bundle everything into a single `.exe`:
+
+### 1. Package Backend
+
+```bash
+cd ../backend
+npm run package #x2 times
+#one for puplic creation with an index dummy file
+#second for importing built public folder from frontend/public to
+#backend/public to dist/public
+```
+
+This will generate a `dist/` directory containing:
+- `ImageUploader.exe`
+- `public/` folder (frontend build)
+- `uploads/` folder (for uploaded files)
+- `config.json/` (runtime configuration)
+
+> 🗂️ The `dist` folder contains everything needed to run the app as a standalone executable on Windows.
+
+---
+Packaged Executable
+
+🚪 Port Configuration Guide
+
+Set port in .env file:
+PORT=4000  # Your custom port
+
+Development Environment
+
+1. First Run:
+
+- Prompts: Would you like to set a custom port? (y/n) [default: 3001]:
+
+- Enter y and specify port (e.g., 5000)
+
+- Saves to config.json
+
+2. Subsequent Runs:
+- Uses port from config.json
+
+3. Reset to Default:
+- Delete config.json to revert to port 3001
+
+💡 Port Priority:
+
+1. .env (development)
+
+2. config.json (production)
+
+3. User prompt (first EXE run)
+
+4. Default 3001
 
 
-Packaging as Executable
-Install pkg:
 
-bash
-npm install -g pkg
-Package the backend:
 
-bash
-cd backend
-npm run package
-This will create an ImageUploader.exe file.
 
-API Endpoints
-POST /upload - Upload an image
+## 🌐 API Endpoints
 
-GET /images - Get all images
+| Method | Endpoint        | Description        |
+|--------|------------------|--------------------|
+| POST   | `/api/upload`        | Upload an image    |
+| GET    | `/api/images`        | Get all images     |
+| DELETE | `/api/images/:id`    | Delete an image    |
 
-DELETE /images/:id - Delete an image
+---
 
-Troubleshooting
-Database Connection Issues:
+## 🛠️ Troubleshooting
 
-Verify SQL Server is running
+### ✅ Database Connection Issues
 
-Check TCP/IP is enabled in SQL Config Manager
+- Ensure SQL Server is **running**
+- Enable **TCP/IP** and set port **1433**
+- Double-check your **credentials** in `config.json`
+- Verify that the SQL database `ImageUploader` exists
 
-Confirm credentials in config.json
+### ✅ File Upload Issues
 
-File Upload Issues:
+- Ensure the `uploads/` directory exists in the backend
+- Ensure the `public/` directory exists in the backend with the same components of the front end `public/` directory
+- Default size limit is **5MB**
+- Only **JPEG/PNG/GIF** files are allowed
 
-Ensure uploads directory exists
+🧹 Clean Installation
+To start fresh:
 
-Check file size limit (5MB default)
+1. Delete backend/config.json
 
-Verify file type (JPEG/PNG/GIF only)
+2. Delete backend/uploads/ folder
 
-"# image-uploder" 
+3. Rebuild frontend and backend
+
+
+
+Jest Unit test Documentation:
+https://docs.google.com/document/d/17hBR5aBIevJ4_v_e5Y-Zmw75FRHiyQwEwf77p_ryG_4/edit?usp=sharing
